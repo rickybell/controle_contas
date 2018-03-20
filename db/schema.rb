@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180315042311) do
+ActiveRecord::Schema.define(version: 20180318033037) do
 
   create_table "accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "name"
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20180315042311) do
   create_table "contributions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "code"
     t.decimal "value", precision: 10
-    t.boolean "reversal"
+    t.boolean "reversal", default: false
     t.bigint "matrix_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -45,7 +45,11 @@ ActiveRecord::Schema.define(version: 20180315042311) do
     t.bigint "account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "person_type"
+    t.bigint "person_id"
+    t.string "status", default: "active"
     t.index ["account_id"], name: "index_matrices_on_account_id"
+    t.index ["person_type", "person_id"], name: "index_matrices_on_person_type_and_person_id"
   end
 
   create_table "physicals", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -61,12 +65,32 @@ ActiveRecord::Schema.define(version: 20180315042311) do
     t.bigint "parent_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "person_type"
+    t.bigint "person_id"
+    t.string "status", default: "active"
     t.index ["parent_type", "parent_id"], name: "index_subsidiaries_on_parent_type_and_parent_id"
+    t.index ["person_type", "person_id"], name: "index_subsidiaries_on_person_type_and_person_id"
+  end
+
+  create_table "transactions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.decimal "value", precision: 10
+    t.string "origin_type"
+    t.bigint "origin_id"
+    t.string "type_type"
+    t.bigint "type_id"
+    t.string "destiny_type"
+    t.bigint "destiny_id"
+    t.boolean "reversal", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["destiny_type", "destiny_id"], name: "index_transactions_on_destiny_type_and_destiny_id"
+    t.index ["origin_type", "origin_id"], name: "index_transactions_on_origin_type_and_origin_id"
+    t.index ["type_type", "type_id"], name: "index_transactions_on_type_type_and_type_id"
   end
 
   create_table "transfers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.decimal "value", precision: 10
-    t.boolean "reversal"
+    t.boolean "reversal", default: false
     t.bigint "subsidiary_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

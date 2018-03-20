@@ -1,17 +1,12 @@
-class Contribution < ApplicationRecord
-  attr_reader :code
-  attr_accessor :value, :reserval
+class Contribution < ActiveRecord::Base
   belongs_to :matrix  
-  def initialize(attributes = {})
-    super(attributes)
-    self.value = attributes[:value]
-    self.reserval = false
-    self.code = generate_code
-  end
+  before_create :generate_code
+  has_many :transactions
+
   private
   def generate_code
     o = [('a'..'z'), ('A'..'Z'),('0'..'9')].map(&:to_a).flatten
-    return "x" + (0...9).map { o[rand(o.length)] }.join
+    self.code =  "x" + (0...9).map { o[rand(o.length)] }.join
   end
 
 end

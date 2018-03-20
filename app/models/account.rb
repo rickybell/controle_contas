@@ -1,3 +1,3 @@
-class Account < ApplicationRecord
-    belongs_to :person, :polymorphic => true
+class Account < ActiveRecord::Base
+    belongs_to :accnt, :polymorphic => true, :dependent => :destroy
 end
